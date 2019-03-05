@@ -26,7 +26,7 @@ public class DemoController {
     }
 
     @GetMapping("/api")
-    public String getAPIResult() {
+    public Mono<String> getAPIResult() {
         return customProcessorService.getResult();
     }
 

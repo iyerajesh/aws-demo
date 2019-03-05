@@ -11,21 +11,25 @@ import reactor.core.publisher.Mono;
 @Service
 public class CustomProcessorService {
 
-    @Value("${fis.baseUrl}")
+    @Value("${fis.baseurl}")
     private String baseURL;
 
-    @Bean
-    WebClient client() {
-        return WebClient.create(baseURL);
+
+    private final WebClient webClient;
+
+    public CustomProcessorService() {
+
+        this.webClient = WebClient.builder()
+                .baseUrl("http://localhost:8080")
+                .build();
     }
 
-    private Mono<ClientResponse> result = client().get()
-            .uri("/hello")
-            .accept(MediaType.APPLICATION_JSON)
-            .exchange();
+    public Mono<String> getResult() {
 
-    public String getResult() {
-        return result.flatMap(res -> res.bodyToMono(String.class)).block();
+        return webClient.get()
+                .uri("/api")
+                .retrieve()
+                .bodyToMono(String.class);
     }
 
 
